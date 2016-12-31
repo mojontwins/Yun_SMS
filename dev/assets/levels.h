@@ -71,6 +71,11 @@ const unsigned char level_map_w [] = {
 	4, 4, 4, 3, 6
 };
 
+// Level height (in screens)
+const unsigned char level_map_h [] = {
+	4, 4, 4, 4, 4
+};
+
 // Enems data
 const unsigned char * const level_enems [] = {
 	enems_0,

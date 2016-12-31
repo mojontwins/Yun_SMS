@@ -4,6 +4,11 @@
 #define ENEMS_0_BANK 3
 extern const unsigned char enems_0 [];
 
+#define MAX_ENEMS_TYPE_01_0	11
+#define MAX_ENEMS_TYPE_02_0	18
+#define MAX_ENEMS_TYPE_04_0	5
+#define MAX_ENEMS_TYPE_06_0	4
+#define MAX_ENEMS_TYPE_09_0	7
 #define HOTSPOTS_0_BANK 3
 extern const unsigned char hotspots_0 [];
 

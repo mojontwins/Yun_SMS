@@ -10,6 +10,7 @@ void level_prepare (void) {
 	c_ts_tmaps = level_ts_tmaps [level];
 	c_pals = level_pals [level];
 	c_map_w = level_map_w [level];
+	c_map_h = level_map_h [level];
 	c_enems = level_enems [level];
 	c_behs = level_behs [level];
 	c_hotspots = level_hotspots [level];

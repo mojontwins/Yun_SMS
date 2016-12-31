@@ -52,7 +52,7 @@ cd ..\map
 rem CHANGE WHEN DONE:
 ..\utils\unpackedmap.exe level0.MAP bin=..\dev\work\level4 4 6 15 4
 
-echo Converting ss_enems
+echo Converting enems
 cd ..\enems
 ..\utils\eneexp2.exe enems0.ene ..\dev\banks\bank3\enems0.h 0
 ..\utils\eneexp2.exe enems1.ene ..\dev\banks\bank4\enems1.h 1

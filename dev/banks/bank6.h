@@ -4,6 +4,10 @@
 #define ENEMS_3_BANK 6
 extern const unsigned char enems_3 [];
 
+#define MAX_ENEMS_TYPE_01_3	8
+#define MAX_ENEMS_TYPE_02_3	12
+#define MAX_ENEMS_TYPE_03_3	8
+#define MAX_ENEMS_TYPE_04_3	3
 #define HOTSPOTS_3_BANK 6
 extern const unsigned char hotspots_3 [];
 
@@ -16,9 +20,9 @@ extern const unsigned char work_level3_ts_patterns3c_bin[2722];
 #define WORK_LEVEL3_SS_PATTERNS_ENEMS3C_BIN_BANK 6
 extern const unsigned char work_level3_ss_patterns_enems3c_bin[1147];
 
-#define WORK_LEVEL3_MAP_3C_BIN_SIZE 1381
+#define WORK_LEVEL3_MAP_3C_BIN_SIZE 1386
 #define WORK_LEVEL3_MAP_3C_BIN_BANK 6
-extern const unsigned char work_level3_map_3c_bin[1381];
+extern const unsigned char work_level3_map_3c_bin[1386];
 
 #define WORK_LEVEL3_MAP_3_LOCKSC_BIN_SIZE 26
 #define WORK_LEVEL3_MAP_3_LOCKSC_BIN_BANK 6

@@ -42,6 +42,12 @@ const unsigned char enems_1 [] = {
 	0x01, 0x57, 0x97, 0x02, 0x02, 0x93, 0x43, 0x02
 };
 
+#define MAX_ENEMS_TYPE_01_1	10
+#define MAX_ENEMS_TYPE_02_1	18
+#define MAX_ENEMS_TYPE_03_1	13
+#define MAX_ENEMS_TYPE_04_1	4
+#define MAX_ENEMS_TYPE_06_1	9
+
 // Hotspots structure is {T XY} x MAP_W x MAP_H
 const unsigned char hotspots_1 [] = {
 	0x00, 0x00, 0x00, 0x00, 0x02, 0xA4, 0x02, 0x67, 

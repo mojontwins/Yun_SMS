@@ -16,7 +16,10 @@ void enems_init (void) {
 	// Unpacks enems data to RAM
 	gp_rom = c_enems;
 	enoffs = 0; enems_init_pointers ();
-	gpit = MAX_ENEMS; while (gpit --) {
+	// gpit = c_map_w * c_map_h * 3; 
+	gpit = 0; gpjt = c_map_h; while (gpjt --) gpit += c_map_w;
+	gpit = gpit + gpit + gpit;
+	while (gpit --) {
 		// read t
 		rdt = *gp_rom ++; *en_c_t ++ = rdt;
 		if (rdt && rdt != 4) baddies_count ++;

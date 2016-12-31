@@ -10,7 +10,9 @@ Dim As uByte d, a, b
 Dim As String Dummy, prefix
 Dim As Integer mapW, mapH, nEnems, mapPants, nPant, i, j, hl
 Dim As uByte t, xy1, xy2, mn
-Dim As Integer typeCounters (255)
+Dim As Integer typeCounters (255), enTypeCounters (255)
+
+For i = 0 To 255: typeCounters (i) = 0: enTypeCounters (i) = 0: Next i
 
 If Command (3) = "" Then usage: End
 prefix = Command (3)
@@ -50,6 +52,7 @@ Print #fOut, "const unsigned char enems_" & prefix & " [] = {"
 hl = 0
 For i = 1 To (mapPants * nEnems)
 	Get #fIn, , t
+	enTypeCounters (t) = enTypeCounters (t) + 1
 	Get #fIn, , a: Get #fIn, , b
 	xy1 = (a Shl 4) Or (b And 15)
 	Get #fIn, , a: Get #fIn, , b
@@ -63,6 +66,10 @@ For i = 1 To (mapPants * nEnems)
 	If hl = 0 Then Print #fOut, ""
 Next i
 Print #fOut, "};"
+Print #fOut, ""
+For i = 1 To 255
+	If enTypeCounters (i) <> 0 Then Print #fOut, "#define MAX_ENEMS_TYPE_" & Ucase (Hex (i, 2)) & "_" & prefix & "	" & enTypeCounters (i)
+Next i
 Print #fOut, ""
 Print #fOut, "// Hotspots structure is {T XY} x MAP_W x MAP_H"
 Print #fOut, "const unsigned char hotspots_" & prefix & " [] = {"

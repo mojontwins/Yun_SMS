@@ -11,7 +11,7 @@ unsigned char cur_rand;
 // Current level
 unsigned char level;
 unsigned char c_bank;
-unsigned char c_map_w;
+unsigned char c_map_w, c_map_h;
 const unsigned char *c_map;
 const unsigned int *c_ts_tmaps;
 const unsigned char *c_pals;
