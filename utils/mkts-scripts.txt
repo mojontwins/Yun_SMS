@@ -1,0 +1,27 @@
+Quick and dirty reference for mkts in 'scripted' mode.
+======================================================
+
+General commands:
+
+Use these before you do anything, otherwise you must know that stupid scripts do stupid things.
+
+MAPFILE out.h 			- Stuff will be output there
+LABEL label 			- Use as suffix/prefix/infix in labels
+CHAROFFSET c 			- Offset by this quantity in the MAPFILE.
+
+OPEN file.png			- Opens a new file for reading.
+PALS file.png			- Establishes this palette as active [NES]
+PALS ABCD 				- Establishes this palette as active [GB]
+
+Metasprite processing:
+
+METASPRITE X0, Y0, WC, HC, OX, OY [FLIPPED|MIRRORED]
+
+						- X0, Y0: where to cut (in chars)
+						- WC, HC: rectangle size (in chars)
+						- OX, OY: metasprite origin, negative is left/upwards.
+						- FLIPPED: like genflipped.
+						- MIRRORED: Use instead of FLIPPED if your sprite has the origin in the horizontal center.
+
+More to come in the future.
+

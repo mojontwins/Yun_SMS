@@ -1,0 +1,505 @@
+Ahí, jugando con el peligro...
+
+20160605
+========
+
+Tenemos...
+
+- Pongpong bastante abandonado desde hace meses, pero básicamente terminado (hablo del engine, claro) a falta de fases.
+- Lala a falta de probar, músicas (Davidian está en ello) y un par de dibujos y textos para el final.
+- Isshokuta con las partes más complicadas del engine completas, a falta de integrar la tira de enemigos que los vaya tirando contra el jugador a medida que avanzamos las fases.
+
+Eso así, lo más gordo. Pero ahora va y se me antoja hacer algo sencillo para SMS, sin fliparme (¡lo prometo! ¡al menos prometo no fliparme mucho!), así que he decidido que vamos a protar Yun. He hecho un tileset extendido (no me limitaré a 16 tiles, hay espacio en ROM de sobra) y adaptado con muuucha paciencia el mapa, metiendo los tiles nuevos. También he hecho los sprites. 
+
+Con esto tengo suficiente para empezar a hacer el motor, pero antes necesito meter a mkts el modo SMS, al menos soporte básico para tiles mapeados de 2x2 y sprites. Será muy parecido al de NES/GB pero con estos cambios:
+
+- En los modos de tile, hay que detectar cual de las dos paletas de 16 colores usa cada patrón (aunque en mi tileset de prueba solo uso una paleta).
+- Para cada patrón de los modos de tile también, buscar inversiones horizontales y verticales.
+- El VDP de la SMS no gira los patrones de los sprites, así que el conversor deberá calcular los patrones extra en los modos de sprites si se le especifica "genflipped".
+- Adaptar el conversor de paletas.
+
+Y poco más. Me pongo con esto, y luego a tirar millas.
+
+~~ 
+
+Cosas que ir metiendo:
+
+findStraightPaletteSMS
+smsDoChars
+smsDoTexts
+smsDoTiles
+smsDoColTiles
+smsDoTmaps
+smsDoSprites
+smsDoSprites16
+smsDoPals
+
+Uf, y me duele mucho la cabeza. Estoy exhausto. No sé si ponerme a dibujar o directamente a jugar a Final Fantasy.
+
+~~~~~
+
+La función que calcula qué color de la paleta de la sms se corresponde al RGB leído en el PNG no se basa en una tabla lookup como en las otras plataformas, sino que se calcula usando esta fórmula, al ser una paleta tipo RGB:
+
+Function smsColour (c As Integer) As uByte
+	smsColour = ( RGBA_R (CUInt( c )) \ 85) Or ((RGBA_G (CUInt( c )) \ 85) Shl 2) Or ((RGBA_B (CUInt( c )) \ 85) Shl 4 )
+End Function 
+
+Cosa que me ahorro. Me voy a poner a hacer un par de funciones de bajo nivel y si eso me tomo una pasti y le doy al Final Fantasy. Me esta reventando la cabeza, qué dolor. 
+
+~~
+
+Después de hacer algunas funciones y maread un poco la perdiz, creo que debería sentarme a definir bien qué quiero hacer. Sobre todo porque hay algunas cosas que quiero hacer bien desde el principio con los conversores de Master (hay que poder funcionar con dos o una paleta, dependiendo del modo, y las funciones de apoyo deberían estar al tanto de estas cosas), porque me duele la cabeza, porque es la leche de tarde, y porque no me apetece un carajo seguir ahora mismo. Que estaba ayer con todo el podewwwr después de haber hecho los gráficos (que han quedado muy bonitos) y con el subidón y tal y ya medio se me ha bajado. Muy probablemente (aunque nunca digas nunca) mañana termine metiendo lo de la tira de enemigos de Isshokuta, metiendo la "versión alpha" de la OGT de Davidian en Lala, o haciendo cualquier mierda de estas.
+
+Buenas noches.
+
+20160606
+========
+
+Después de darle fran al Isshokuta, me pongo un ratito con esto con mucho cansancio y poco focus. He hecho la primera compilación, que incluye soporte para modo Chars y para importación de paletas, y haré las primeras pruebas en breve. Que sí, que sí.
+
+Uf.
+
+~
+
+Bueno, tras one headache too many (me he tirado siete horas dando vueltas con un fallo tontísimo) el modo chars ya funciona. El modo pals, también. Empezaré haciendo los modos mapped y sprites, para poder convertir las cosas de este juego, además del modo text.
+
+Pero ahora no me apetece.
+
+Function smsFindPatternInPoolAndAddEx (patternS As String, ByRef wasNew As Integer, ByRef modifier As Integer) As Integer
+Sub smsExtractPatternFromWithPal (img As Any Ptr, x0 As Integer, y0 As Integer, pal () As Integer, wp As Integer, pattern () As uByte)
+Function smsDetectPriority (img As Any ptr, x0 As Integer, y0 As Integer)
+
+Bueno, al final me medio apeteció. Ya tengo la exportación de metatiles rollo 1 unsigned int por cada patrón, para copiar directamente a la nametable y tal y cual. Ahora sólo me queda exportar sprites y lo tengo hecho, pero eso si eso ya mañana.
+
+Tengo que pensar en un buen formato para metaspritesets. DevkitSMS no los soporta de entrada así que me los haré como mejor me convenga.
+
+Voy a fregal.
+
+20160607
+========
+
+Voy a hacer el tema de los sprites y a tomar viento.
+
+En la master los sprites son más tonters, aquí no hay byte de atributo para elegir parleta o propiedades. Sólo tenemos (x, y) y el tile que usan. Los metasprites, al ser consumidos de forma secuencial, pueden muy bien tener 3 bytes por sprite y una marca de final (0x80). De todos es conocida mi falta de aprecio por todas las comprobaciones estúpidas que se hacen en SMSlib para crear un sprite (¿De verdad necesito que se preocupen por mí de que no estoy mandando Y = $D0?). Mi función de manejo de metasprites irá en la propia lib y accederá directamente a los arrays que sirven como buffer a los sprites. Paso de pasar por el aro.
+
+Pero bueno, antes tengo que tener a mkts escupiendo metasprites de master system.
+
+Es la función más sencilla, ya que no hay que buscar espejados ni rellenar paletas. Debería tenerla en un saltico. Voy a ello antes de que se haga más tarde y me entre un brown.
+
+~
+
+Bueno, a ver... tengo que generar la versión h-flip automáticamente si se me pide.  Tampoco es tan tan tan tonto.
+
+~
+
+Hecho. Vamos a probar con la parte de enemigos a generar flipados (XD). (flipped, para los que no lo pillen, que es espejados)
+
+~~~~ 
+
+Todo funciona guay tras un par de toqueteos. He pensado además que para este tipo de juegos sencillos puedo crear la estructura "orthometasprites", ya que son todos ortogonales y enrejillados, y sería así:
+
+offx, offy, n, t1, t2, ... , tn.
+
+Eso haría que el render de los metasprites fuese más compacto y que, además, ocupasen menos en ROM.
+
+Nada, esto me pasa por no pensar antes de hacer las cosas. Voy a cambiar el output para el modo sms para que los metasprites tengan ese formato. Debería ser fácil...
+
+Mejor, lo pongo como opción, porque el formato original vendría bien para metasprites más grandes con "agujeros". Añado "simple" a los parámetros. También "supersimple", que los saca sin la cabecera de 3 bytes y asume una función que ya sema sus dimensiones y origen.
+
+~~
+
+Bueno, que se me iba el perol... Ahora lo que tengo que hacer es empezar a montar esto. 
+
+- Meter la función de pintar metasprites en SMSlib
+- Compilar todo. SMSlib, PSGlib, APlib.
+
+Luego empezaré un roadmap típico. El port debería ser bastante directo con grandes secciones de cortapega, pero se lleva mucho mejor si se va poco a poco rellenando cosas. El primer hito será pintar las pantallas, que es muy buen primer hito. Luego enemigos, hotspots, jugador, colisiones, fabolees, cosas raras, una pachocha, y tortilla.
+
+~~~~~
+
+Bueno, empecemos. Vamos a ir construyendo el make.bat y luego creamos una estructura básica del programa.
+
+A ver, en la SMS hay que mamar mucho. Al no haber espejados por hardware en los sprites, nos podemos ir olvidando de tener todos los enemigos y tiestos a la vez en VRAM. Por tanto, y por un lado, los spritesets de los enemigos deben ir separados por fase.
+
+Los metasprites, además de los patrones que hay que almacenar en ROM y luego transferir a VRAM, tienen sus definiciones de metasprites. Debo mantener un puntero a la colección de metasprites activa en cada nivel.
+
+Por tanto, cada nivel debe constar de:
+
+- Patrones de los metasprites de los enemigos.
+- Array de metasprites de los enemigos (metaspriteset)
+- Patrones de los metatiles.
+- Array de los metatiles.
+- Array con las pantallas.
+- Enemigos y hotspots.
+- Cerrojos.
+
+Tengo que ver si hay algún conversor de NES que pueda usar con esto. De entrada me puedo ir olvidando de usar RLE porque las pantallas son todas de la hostia de complejas con mil variacioncitas (coño, que me lo cuenten a mí, que las he hecho, vaya lata). 
+
+Voy a hacer acopio de todos los assets necesarios para el primer nivel. Además, tenemos estos assets generales:
+
+- Patrones para los textos. Limitados a los textos que vayan a salir. Esto lo voy dejando para el final.
+- Patrones de los metasprites de Yun.
+- Array de metasprites de Yun.
+- Patrones de los metasprites de para los objetos especiales y tal.
+- Array de metasprites de los objetos especiales.
+- Patrones con iconos y numericos para usar en el Hud que se pintará como sprites.
+
+Mucha tela veo yo ahí. Voy a empezar por convertir los metasprites de Yun y los items, que van a ser fijos, y luego veo que hago. Por otro lado, tenemos que el fantasma y el mono pueden aparecer en diferentes fases, así que eso debería ser fijo también. Voy a empezar con esto y voy haciendo cuentas.
+
+Espera, voy a sacar a los sprites especiales del metaspriteset, y así aprovecho los espacios para otros sprites de enemigos y más variedad. Es tontería.
+
+~~~~ 
+
+Cuenta:
+
+- Yun			71
+- items 		30
+- Eleuterio		24
+- Fantasma 		18
+- Hud 			16
+
+Esto da 159 patrones. Los enemigos habrá que generarlos a partir del 160. Veamos cada tira cuantos ocupa.
+
+- Level 0 		54 (porque tiene un hueco)
+- Level 1 		60 (porque tiene un hueco)
+- Level 2       67 UF
+
+Bueno, por ahora medio cabe. Y os tengo que dejawr
+
+~~
+
+Voy a montar un proyecto dummy para pintar un par de cosas en pantalla y ver que todo está bien importado y mis añadidos a SMSLib están funcionando. Pero antes voy a diseñar un poco el mapa de memoria. En principio voy a apuntar a tener una ROM de 64K, eso sería 32K fijos y dos páginas más, una para la OGT y otra para los niveles.
+
+Por tanto, debería montar en la ROM base el motor y los datos principales, y en la ROM extra los mapas y gráficos. La idea es que si quiero hacer más niveles pueda añadir más páginas sin problemas. Luego lo terminaré reorganizando todo, claro, que esto es así siempre. Los metasprites principales (los arrays con la definición) si deberían estar disponibles siempre, pero los patrones es algo que se puede mover si es necesario. 
+
+De entrada, además, creo que voy a comprimir los patrones con aplib, ya que estoy. Voy a copiar el aplib que me funciona bien del proyecto de Super Uwol de SG y a comprimir los binarios. Luego los meteré todos en BANK3. El BANK2 lo reservo por ahora para la ogete, así que debería crear archivos vacíos. Por lo pronto voy a ver cómo automatizar toda la creación de los bancos.
+
+Para compilar un banco de ROM extra necesito un archivo .c contenedor que meta toda la mierda que necesito (en .h, por ejemplo). También necesito exportar cabeceras de toda dicha mierda en un .h que incluir desde el bloque principal. Por lo pronto no tengo otra que meter todos los binarios en una carpeta y hacer un folder2c. Eso implica que el conversor del mapa debería producir un binario, al igual que los enemigos. Más cosas XD
+
+Ahora mismo las cosas las estoy produciendo (los binarios, quicir) en los directorios work/main y work/level?. Creo que para construir los .c/.h de los bancos necesito otra estructura de carpetas e ir copiando ahí lo que vaya necesitando.
+
+El problema está en ¿qué hacer con las definiciones de metasprites y metatiles, que son archivos .h? Pues nada, habrá que añadirlos al bloque principal y luego exportar de alguna forma sus cabeceras. ¿Cómo? Uf, tengo que pensarlo. Quizá esto debiera hacerlo mkts. O quizá debería pasar de folder2c y hacer las cosas de forma manual. Veamos...
+
+Por ahora voy a ocuparme de BANK3, donde debo meter mapas, enemigos, metatiles, patrones de metatiles, metasprites y patrones de metasprites. Todos los patrones van comprimidos, así que deberé pasarlos a código. 
+
+Al final debe compilarse un bank3.c que tenga todos esos datos (puedo cargarlos con #includes). Luego tengo que generar, de alguna forma, un archivo bank3.h con las exportaciones necesarias, con esta forma (pillado de uno de los bancos de moggy):
+
+extern const unsigned char	pal_gover_psg[];
+#define				pal_gover_psg_size 974
+#define				pal_gover_psg_bank 2
+
+Se me ocurre hacer algo así:
+
+1.- Obtener todos los .bin comprimidos en work/blah
+2.- Convertir esos .bin comprimidos a .h con alguna de las herramientas que tenga por ahí (bin2c)
+3.- Poner todos los .h en la carpeta banks/bank3
+4.- Ejecutar una nueva aplicación mía así:
+
+	$ generatebank scan=banks\bank3 out=banks\bank3
+
+	Esta aplicación mía va a hacer lo siguiente:
+
+	1.- Abrirá para escritura archivos .c y .h con el nombre especificado en out.
+	2.- Recorrerá todos los archivos que encuentre en banks\bank3, para cada archivo:
+		- Concatenará todo el contenido en el archivo de salida .c
+		- Todas las lineas que empiecen por const las colocará en el .h con "extern"
+		- Todas las lineas que empiecen por #define las colocará en el .h
+
+Voy a probar. Por el momento voy a prepararme los archivos de los patrones, pasándolos a código, y así estreno bin2c y veo cómo se comporta.
+
+~~
+
+Muajá, soy el rey de los scripts. Ya está hecho y funciona bastante bien. 
+Vaya tela, lo que me está costando arrancar... Pero todas estas mierdas que estoy haciendo harán que el próximo proyecto sea muuuucho más fácil de llevar.
+
+~~
+
+Debo introducir un conjunto de funciones de carga, load_, para cargar los diferentes recursos que necesito. Por un lado habría que hacer la carga inicial de los patrones de los sprites (con aplib), y luego en cada fase habría que descomprimir los patrones de los enemigos. Se me está ocurriendo que como la Master tiene 8K de RAM que es como que una puta barbaridad cuando uno está acostumbrado al 1.5 escaso que te queda libre en la NES, a lo mejor es viable tener los mapas comprimidos también y sacarlos e interpretarlos desde RAM.
+
+Esto mola porque así puedo construir una buena base para un MK1 de SMS que permita mapas modificables y portar algunos juegos como Sgt. Helmet Training Day.
+
+Por lo pronto tengo que apañar un exportador de mapas. En NES he estado muy orientado a 16 tiles + decos, así que no sé si tengo algo usable y medio en condiciones. Si no, desde luego, es cosa de 5 minutos.
+
+~~ 
+
+Nah, voy a hacer una versión idiotizada de packmap que se llame unpackedmap o algo así.
+
+~~
+
+Perfecto. Ya está todo, justo a tiempo, porque Churum se está despertando ya. Creo que lo próximo será, por fin, Generar una ROM de prueba que saque algo por la pantalla. Aunque a lo mejor conviene ir metiendo ya en el toolchain la conversión de los enemigos, que es la que falta y que será exactamente igual que en el original (mismo .exe, mismos archivos). De hecho, mientras no se termina de despertar del todo voy a ello, que así ya lo tengo hecho para la próxima.
+
+Ya está todo. Además, ya compilo los bancos con sdcc.
+
+Para este proyecto, y por el hecho de tener que bregar con sdcc, voy a hacer eso de tener muchos .c/.h y compilar los módulos por separado. O no, como me pete.
+
+20160610
+========
+
+Me lié con algunas mierdas, pero vuelvo al ataquew. Veamos, lo primero que voy a hacer es el proyecto mínimo que me pinte un par de metatiles por pantalla y diga HOLA MUNDO, tal y cual y pascual. Voy a mirar el Moggy a ver.
+
+~
+
+Por lo pronto, si meto todos los datos de las tres fases en el mismo banco me voy a freír monas, así que a tomar por culo: a banco por fase, y rellenamos con otras cosas anexas, como la música (si cabe) y un bizcocho. De fresa.
+
+Voy a reordenar. Estoy del make.bat hasta la coronilla. Lo bueno es que en cuanto lo tenga ya no hay que tocarlo más.
+
+~~ 
+
+Bueno, ya compila y salen dos peros por la pantalla. Vamos a empezar. Voy a montar todo el módulo para manejar los mapas, que quiero organizarlo guay. Por lo pronto, tengo que hacer un array en RAM y luego descomprimir ahí. Las funciones de pintado y demás mierda leen esa copia descomprimida.
+
+Joder, es que no me creo que tenga 8K de RAM. Es como el mundo.
+
+~~ 
+
+Vale, ya pinto las pantallas. Ahora se me está ocurriendo, viendo lo tonta que es la función, marcarme la increíble pichez de que las pantallas salgan scrolleando desde arriba, la izquierda, derecha, o abajo. Eso molaría de la hostia, pero supongo que necesito hacer funciones específicas. Voy a hacer la de desde la derecha, que parece la más fácil (pintar la pantalla por columnas e ir scrolleando).
+
+Necesito meter en printer dos funciones para pintar una fila o una columna del tile.
+
+~~~~~
+
+¡Mua ja ja ja! ¡Me la saqué a saco! Hace el scroll bonito. Los verticales son más difíciles porque siempre es más difícil en vertical y sobre todo cuando el wrap no es de tamaño de la pantalla, pero mola. Lo que sería ya una sacada de picha total (sacada de picha giratoria) es que los sprites también se movieran y saliesen y entrasen de la pantalla al hacer esto, pero mucho me temo que hacerlo con algo que no sea el personaje principal sería muy complicado y seguro que me salto el frame, así que, para el primer juego, lo dejaré. Pero bueno, a lo mejor un día se me ocurre cómo hacerlo y se mete.
+
+~
+
+Vamos a ver de meter los enemigos. En principio no debería tener que tocar ni una coma de original - excepto el tema hardware, of cors. Voy montando además el main loop.
+
+Voy a hacerlo además mucho más sencillo. Total, aquí tengo RAM de sobra para tenerlo todo en RAM y no tener que estar con el mamomeno de los enemigos persistentes y demás mierdas con chorizo. Meto un rollo tipo enoffsmasi o quizás punteros a los valores actuales. Ahora mismo tengo que diseñar la carga inicial en enems_init, y luego en enems_load lo que hago es inicializar. O también puedo dejarlos todos ya preparados en RAM y así la historia será más sencilla.
+
+Veamos, por un lado tengo esto en ROM:
+
+byte 	Contenido
+0 		ent
+1 		X-Y inicio
+2 		X-Y final  (ambas en tiles)
+3 		Properties.
+
+A partir de esto se generan estas variables:
+
+t 				tipo
+x, y 			posición actual
+x1, y1 			posición de inicio (reaprovechada en otras cosas para algunos enemigos)
+x2, y2 			posición de final (idem)
+mx, my 			Se calcula con respecto a x1, y1 al principio
+s 				cell base para el sprite
+fs 				frameskip. Para velocidades fracción (0.5, 0.25...)
+enf_x, enf_y	posición actual en punto fijo
+enf_vx, enf_vy 	velocidades actuales en punto fijo
+ct 				contador para cosas
+
+24 pantallas equivalen a un máximo de 72 enemigos. El estado de cada enemigo ocupa 20 bytes, por lo que ocuparíamos 1440 bytes de RAM, lo cual es asumiscible. Tampcoo hay mucho más aparte de esto y el mapa descomprimido (4K).  En realidad, menos, porque puedo ahorrarme varias de ellas, como las de punto fijo, cell base, ct. Eso me deja con 11 bytes por enemigo, lo que resultaría en 792 bytes. 
+
+todo suma, of course, pero por ahora creo que vamos bien si tomamos esta vía. Voy a crear las variables.
+
+20160611
+========
+
+Uff, tras un día largo con viajes, no siestas de churum y demás, me pongo a darle fran a las mil, me rompo el cerebro, pero al menos tengo lo básico de los enemigos funcionando, a falta de integrar con fabolees (estado upside down y atrapado por bolas) y con los cocos. Pero para ello tengo que implementar cocos, player y fabolees. Y luego los hotspots.
+
+Al final los enemigos decidí hacerlos un poco mejor que en el engine original aprovechando que hay más RAM (como comenté), lo que ha limitado un poco la capacidad de cortapega, pero bueno. Supongo que las cosas más modernas como los fabolees y ¿la rutina de movimiento? podré adaptarlas más fácilmente.
+
+Hasta mañana.
+
+20160612
+========
+
+Metí los cocos indoloramente anoche después de escribir en el diario. Ahora estoy metiendo el jugador. Voy a hacer una pequeña mejora parecida a la de Lala en NES, en la que la "Y" real tiene un offset de 16 para que el sprite pueda salir por la parte superior de la pantalla con cierto margen y que no sea tan coñazo cambiar de pantalla verticalmente.
+
+La coordenada "Y" real será + 16, la colisión con el mapa será restando 16 a la coordenada Y (o una casilla completa).
+
+~~
+
+Y así, entre dimes y diretes, he metido al player y los fabolees... Pero ya estoy perdiando frames. Voy a tener que pensar en ir optimizando, aunque ya lo hice en su día con la versión de NES. Me pasó igual con Super Uwol. O bien cc65 genera mejor código que sdcc, o es bien cierto que un Z80 a 4Mhz no es realmente mucho más rápido que un 6502 a 1 y pico. Habrá que ver qué hacer, multiplexaré más.
+
+~
+
+Por lo pronto, ensuciar el código eliminando las funciones que hacen render por su cuenta y metiendo todos los renders en las funciones "do" de los objetos ha hecho que pase de perder frames en 2 lineales + 3 fabolees a 3 lineales + 3 fabolees. Algo es algo, he ganado bastante frame. Ahora voy a pasar a inline algunas cosas. Puede que gane si hago que la función de colisión con el escenario sea inline. Tengo sitio para hacerlo en la ROM.
+
+~
+
+Poniendo todo lo que forma parte del main loop "inline", con un leve incremento en el espacio utilizado, creo que he eliminado (por el momento) el problema de las ralentizaciones. Habrá que ver qué ocurre en el caso de haber dos fantys y tres fabolees más un lineal. En teoría, si no me he equivcado, hay dos cosas que se mueven en punto fijo: fabolees y fantis, y el grueso de su lógica se ejecuta en frames alternos (incluyendo colisiones). Probablemente busque también la forma de multiplexar los cocos y los enemigos lineales. Siempre habrá tiempo para todo perdiendo algo de precisión que, a fin de cuentas, no es algo que el jugador note (¡pero las ralentizaciones sí!).
+
+Mañana le daré fran a las colisiones:
+
+- fabolee->enemigos (con muerte y conteo)
+- enemigos->jugador
+- pinchos->jugador
+- cocos->jugador
+
+Y luego ya montaré los hotspots en un salto. Me queda bastante de cortapega, aunque las colisiones habrá que tocarlas todas porque ahora la coordenada "Y" es en lógica 16 más que en pantalla.
+
+Ah, también he cambiado por la versión "unsafe" la función que copia los sprites a la SAT. Total, la hago justo después de esperar a VBlank, no debería haber problemas. No hago nada más (por ahora).
+
+20160613
+========
+
+Vamos a empezar (por ahora, libre de ralentizaciones) a hacer las colisiones. Empezamos con la interacción entre fabolees y enemigos. Luego, en un rato libre, cuando me harte de esto, cambiaré a Isshokuta de nuevo para meter colisiones horizontales con vistas a empezar a hacer fases. ¿Pero qué hago hablando de eso aquí? Bof. Vamos al lío.
+
+Otra cosa que tengo que hacer es reducir el rebote de los fabolees contra el "techo" de la pantalla, que está ajustado para 6 bits de precisión de punto fijo y estoy usando 4. La expresión 16 + (RAND8 & 31); debería ser dividida entre 4, en principio, resultando en un mero 4 + (RAND8 & 7). Creo. Si no va bien ya la cambiaré.
+
+~~~~
+
+Metidas cosas y tal, pero sigo perdiendo frames. Vamos a poner una lista (o solo una cosa, depende) de ideas locuelas que se me van ocurriendo.
+
+- Hay mucho shift de 4 espacios, para los dos lados, y en muchas ocasiones se hace para transformar coordenadas de tile a coordenadas de pixel. En todos esos casos, podría gastar 256+16 bytes en hacer dos tablas de shifts, y cambiar estos desplazamientos por referencias a esas tablas. ¿Y si lo pruebo? Qué locou. Voy a generar las tablas, paso de escribirlas a manor.
+
+No sé si apañará mucho, pero algo sí que apañará, y tengo esos 272 bytes.
+
+Antes de calcular nada, vamos a ver los tstates. Voy a ver qué código se genera para esto:
+
+rda = rdb << 4;
+rda = shl4 [rdb];
+
+A ver cuál es más rápido / lento. En NES, usar la versión del array es bastante más rápido.
+
+Código generado:
+
+;yun.c:47: rda = rdb << 4;
+	ld	a,(#_rdb + 0) 				13
+	rlca 							4
+	rlca 							4
+	rlca 							4
+	rlca 							4
+	and	a,#0xf0 					7
+	ld	(#_rda + 0),a 				13
+									49
+
+;yun.c:48: rda = shl4 [rdb];
+	ld	bc,#_shl4+0 				10
+	ld	hl,(_rdb)					16
+	ld	h,#0x00						7
+	add	hl,bc 						15
+	ld	a,(hl) 						7
+	ld	(#_rda + 0),a 				13
+									68!!!!
+
+Hostia puta de oro, sí que es un atraso el Z80, cada vez lo tengo más claro :-O Es más lento usando un lookup table. Pero para cualquier número de rotaciones, vaya. Por ahí no puedo tirar, es una optimización que no puedo hacer.
+
+Se me van acabando las ideas XD. Pero bueno, tiro para adelante, y luego ya vemos.
+
+~~~
+
+Tengo que multiplexar mejor. Cuando hay tres fabolees en pantalla, resulta que o bien se procesan los tres, o bien ninguno. También hay que tener en cuenta que los fanties también son pesados y también los tengo que meter en el multiplexado. Ahora mismo se procesa primero los fabolees y luego los fantis. En el juego hay un máximo de dos fantis por pantalla. Hablamos de que habrá un máximo de 5 objetos, pero pocas veces. Las más serán 4 objetos de punto fijo complejo.
+
+frame A: FB0, FB2, FANTY 1
+frame B: FB1, FANTY 0
+
+Podemos dejarlo así: si el frame es par (half_life == 0), se ejecutan los fabolees pares y los fantis impares.
+Si el frame es impar (half_life == 1), se ejecuta los fabolees impares y los fantis pares.
+
+Controlar lo primero (par / impar en fabolees) es relativamente fácil. Luego debería encolar a los fantis .
+
+Bla bla bla, como dice Bisqwit, que sabe mucho aunque sea un poco rarete, siempre hay una solución simple. Es mucho más fácil: [si ejecuto una lógica compleja, debo saltarme la siguiente.]
+
+Creo que lo más sencillo es tener un flip flop. Siempre que haya que ejecutar algo, mirar el flip flop. Si es 1, ejecutar. Si es 0, no ejecutar. Girar el flip flop. El flip flop se inicializa a half_life cada frame.
+
+Vamos a probar...
+
+~~ 
+
+Bueno, en la fase que tengo a lo máximo se dan 3 fabolees y un fanty, y en ese caso apenas noto algún tirón (supongo que si se junta con más cosas, ocurrirá, pero ya buscaré como seguir partiendo las tareas entre frames). Voy a seguir con las colisiones.
+
+Ahora parece que los fabolees atrapan correctamente a los malos. Ahora tengo que ver si realmente puedo matarlos, y para eso tengo que implementar la siguiente colisión: player<->enemigos. Esto implica implementar la muerte del jugador, que tengo a medio construir. Lo suyo es que las diferentes condiciones de muerte señalen con "pkilled" y en el main loop se detecte y se actué en consecuencia. Así lo tengo todo mejor controlado, sobre todo el orden de ejecución de las cosas. Así se hace en Lala, vaya, que está mejor que Yun.
+
+Sobre el tema de la optimización, lo bueno del paradigma [si ejecuto una lógica compleja, debo saltarme la siguiente] es que puedo extenderlo muy fácilmente guardando más ejecuciones con el flip flop y girándolo cuando sea necesario.
+
+~~ 
+
+Bueno, algún que otro glitch hay por ahí, pero prefiero seguir que si no me aburro. Pero antes creo que me voy a tomar un poco de descansito. Cuando vuelva, haré que el jugador se muera con los pinchos y con los cocos.
+
+~
+
+Más o menos está, pero ahora se me ha ocurrido hacer una transición chula para pintar el mapa al principio del juego o cuando nos morimos, haciendo el patrón de caja de Ninjajar. Así pospongo el hacer un fade out feo un poco más tiempo.
+
+A ver si me sale a la primera o tengo que compilar mil veces.
+
+~~~
+
+Ha quedado bonico, aunque tengo que afinar un par de cosas antes. Por lo pronto, borrar toda la pantalla para que contenga el caracter 256 al inicio, y no el 0 XD - esto por bonitor, porque una vez que tenga esto en marcha dará igual.
+
+Voy a ver si hay implementado algún fill en SMSlib. Si no, me hago un CLS. Y luego, plataformas móviles. Y más tarde hotspots. Ya casi está esta mierda.
+
+Creo que me valdría en principio con SMS_VRAMmemsetW (SMS_PNTAddress, 256, 1536);
+
+~~
+
+Bueno, llegó el momento de los hotspots. Voy a ir creando las estructuras y luego pues no sé, porque con este calor el PC parece que va a revenetar de calor y tampoco es plan cargármelo. No sé muy bien qué hacer al respecto, por cierto. Soy pobre para permitirme una factura de luz con aires acondicionados. Me buscaré un ventilador chiquitito, o algo XD
+
+~~
+
+He añadido estas dos funciones a mi módulo de SMSlib:
+
+void SMS_MT_setSpriteFastAt (unsigned char x, unsigned char y, unsigned char sprite, unsigned char tile);
+void SMS_MT_initSpritesEx (unsigned char initial);
+
+Para poder reservarme unos sprites al inicio de la SAT y modificarlos directamente. Necesitaré estos sprites: 3 para los símbolos, 1 para las vidas, 1 para las llaves, 2 para la cuenta de enemigos. En total sale 7.
+
+Voy a ver si esto funciona. Joder, el ordenador va a reventar de calentor.
+
+~~~
+
+20160624
+========
+
+El pasado par de días he estado rehaciendo el tileset para el desierto y he corregido una pequeña omisión en el motor (que tenía que ver con la selección de metasprites para enemigos en las fases). El tileset se exporta mal, tengo que revisar el conversor a ver si hay algo que se me esté escapando, ya que hay algunos tiles en los que genera la paleta que no es.
+
+Mñe.
+
+Ya está, estaba usando un algoritmo de mierda para detectar la paleta, y eso que pensaba que molaba miles. Ahora calcula todo extupendaumente bien. Me doy un paseo por el desierto, todo parece funcionar (minus Zurully, que tengo que ver si metemos o no).
+
+Voy a probar otras paletas sobre el juego mismo, que creo que es lo más mejorw.
+
+~~ 
+
+20160626
+========
+
+Encontré una paleta con fondo azul turquesa que me mola tela, pero estos prefieren la original azul, así que la azul sea. Además he visto que en NTSC sigo perdiendo frames cuando hay mucho jaleo (5 objetos de punto fijo, a partir del 5º). En Pal va perfect, pero no quiero sucumbir. Hablando con Ángel se me ocurrió que lo suyo era precalcular cosas, y creo que los incrementos de punto fijo de los fabolees pueden simularse con incrementos precalculados en aritmética entera, empleando unsigned char para todos los ejes y ahorrando conversiones y cálculos de 16 bits. Mañana me precalcularé los incrementos de las coordenadas para prescindir de aceleraciones y velocidades y codificaré un nuevo módulo de movimiento de fabolees más sencillo usando estas tablas de incrementos. Seguro que gano lo justo para hacer que no se ralentice y que entre en el frame el tiempo que tarde en ejecutarse el player de música, que eso es otra cosa que todavía no he tenido en cuenta.
+
+En fin, diversión.
+
+Por lo que se ve, 6502 es un procesador mucho mejor para trabajar con un compilador de C, estoy viendo. Quién lo diría.
+
+20160628
+========
+
+Ayer implementé los fabolees empleando tablas precalculadas y únicamente aritmética entera. Lo hice rápido y mal y, aunque funciona, seguro que se puede optmizar un poco. Ya veré.
+
+Lo que tengo que averiguar ahora es como medir el tiempo de frame. En la NES es fácil poniendo la imagen en blanco y negro, pero no sé si en SMS se podrá hacer algo. Si los cambios de paleta o un cambio en el color de fondo surge efecto inmediatamente, me sirve. Voy a mirar lo del color de fondo, a ver.
+
+Um - probado, pero solo parece afectar al borde. Veamos por ejemplo con la paleta...
+
+~~
+
+Con la paleta funciona. Lo que me parece muy fuerte es que los tres fabolees se coman todo el tiempo de frame en NTSC. ¿SDCC es una mierda o el Z80 es una mierda?
+
+No sé bien qué hacer. En PAL da tiempo y de sobra, pero en NTSC se acaba el frame enseguida, incluso sin fantys, si nada...
+
+Así al ojal, el tiempo de montar el metasprite es igual que el tiempo de procesar todo el fabolee. Quizá tenga que empezar a desenrollar estas cosas... Voy a ver qué tal quedó.
+
+~~
+
+Bueno, he creado funciones super específicas y desenrolladas y vuelvo a entrar en el frame en NTSC, al menos con cuatro elementos complejos en pantalla (habrá que ver con cinco, pero ahora no me puedo poner a jugar mucho rato hasta llegar a pantallas con proyectiles y varios fantys). Creo que lo dejaremos así, por el momento, y seguiremos con el proyecto.
+
+Lo que voy a hacer es meterle música y efectos, para comprobar que aún así sigue dando tiempo. Ya veremos...
+
+Le meto los de Uwol de SG.
+
+20161221
+========
+
+A principios de Julio mejoré más el motor y además planteé una de las fases extra: la cascada. Estaba quedando chula, pero sólo tenía una pantalla. De todos modos, esta fase será más rollo "tutorial" que otra cosa, así que no debería ser muy larga. ¿Y si meto cuadros de texto y diálogos para avanzar la historia? Podría hacerlo en todas las fases. Lo dejo aquí apuntado.
+
+~~
+
+Ha pasado un siglo pero, claro, he estado con doscientas otras historias. Seguimos despacito. Añado la fase 1 (la fábrica). Y voy pensando en las cutscenes super chulas que vamos a meter.
+
+Hablamos sobre la otra fase extra, y parece que será en Pepinoni :-)
+
+Ya he montado la fase, pero ahora veo que las plataformas que te empujan están mal. Probablemente no haya ajustado las velocidades la precisión de 4 bits (Yun original tiene precisión de 6 bits, es "de los antiguos").
+
+~~
+
+Me acabo de dar cuenta también de que no hay Zurully en esta versión. Tendré que adaptarlo de la de NES y pensar en meterlo. Habrá que revisar la colocación de los enemigos en la fase 3, pues. Pero ahora no. En cuanto vea que los conveyors funcionan guay, lo dejo on hold hasta nuevo aviso. El 31 de Enero hay que enviar los juegos para el concurso de nesdev y aún me queda hacer una fase en el pongpong y dejar fina la fase bonus.
+
+~~
+
