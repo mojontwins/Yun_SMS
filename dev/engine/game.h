@@ -7,6 +7,8 @@ inline void game_init (void) {
 	enems_init ();
 	player_init ();
 	hotspots_init ();
+
+	anim_tile_conveyor_offs = 0;
 }
 
 inline void game_screen_flick (void) {
@@ -64,6 +66,12 @@ inline void game_pal_effects (void) {
 	}
 }
 
+inline void game_tile_effects (void) {
+	switch (level) {
+		case 1: tile_effects_factory_do (); break;
+	}
+}
+
 inline void game_loop (void) {
 	// VDP On
 	SMS_displayOn ();
@@ -105,7 +113,7 @@ inline void game_loop (void) {
 			enems_do ();
 			player_render ();
 			game_extra_shit_do ();
-			SMS_finalizeSprites ();
+			SMS_MT_finalizeSpritesEx ();
 		} 
 
 		// Waits until it's safe to copy sprites to SAT
@@ -115,6 +123,7 @@ inline void game_loop (void) {
 		SMS_waitForVBlank ();
 		UNSAFE_SMS_copySpritestoSAT ();
 		game_pal_effects ();
+		game_tile_effects (); 
 		
 		// OGT
 		ogt_run ();	

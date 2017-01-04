@@ -15,7 +15,7 @@ void map_scr_prepare (void) {
 void map_screen_update (void) {
 	SMS_MT_initSpritesEx (7); 	// Sprites 0-6 are reserved for the hud.
 	player_render ();
-	SMS_finalizeSprites ();
+	SMS_MT_finalizeSpritesEx ();
 	SMS_waitForVBlank ();
 	UNSAFE_SMS_copySpritestoSAT ();
 	ogt_run ();	

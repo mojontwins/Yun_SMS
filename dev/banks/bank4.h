@@ -15,21 +15,29 @@ extern const unsigned char hotspots_1 [];
 #define MAX_HOTSPOTS_TYPE_0_1	18
 #define MAX_HOTSPOTS_TYPE_1_1	1
 #define MAX_HOTSPOTS_TYPE_2_1	5
-#define WORK_LEVEL1_TS_PATTERNS1C_BIN_SIZE 2092
+#define WORK_LEVEL1_TS_PATTERNS1C_BIN_SIZE 2097
 #define WORK_LEVEL1_TS_PATTERNS1C_BIN_BANK 4
-extern const unsigned char work_level1_ts_patterns1c_bin[2092];
+extern const unsigned char work_level1_ts_patterns1c_bin[2097];
 
 #define WORK_LEVEL1_SS_PATTERNS_ENEMS1C_BIN_SIZE 1207
 #define WORK_LEVEL1_SS_PATTERNS_ENEMS1C_BIN_BANK 4
 extern const unsigned char work_level1_ss_patterns_enems1c_bin[1207];
 
-#define WORK_LEVEL1_MAP_1C_BIN_SIZE 2788
+#define WORK_LEVEL1_MAP_1C_BIN_SIZE 2792
 #define WORK_LEVEL1_MAP_1C_BIN_BANK 4
-extern const unsigned char work_level1_map_1c_bin[2788];
+extern const unsigned char work_level1_map_1c_bin[2792];
 
 #define WORK_LEVEL1_MAP_1_LOCKSC_BIN_SIZE 6
 #define WORK_LEVEL1_MAP_1_LOCKSC_BIN_BANK 4
 extern const unsigned char work_level1_map_1_locksc_bin[6];
+
+#define WORK_LEVEL1_CONVEYOR_LEFT_BIN_SIZE 96
+#define WORK_LEVEL1_CONVEYOR_LEFT_BIN_BANK 4
+extern const unsigned char work_level1_conveyor_left_bin[96];
+
+#define WORK_LEVEL1_CONVEYOR_RIGHT_BIN_SIZE 96
+#define WORK_LEVEL1_CONVEYOR_RIGHT_BIN_BANK 4
+extern const unsigned char work_level1_conveyor_right_bin[96];
 
 #define WORK_OGT_M_INGAME1_PSG_SIZE 1853
 #define WORK_OGT_M_INGAME1_PSG_BANK 4

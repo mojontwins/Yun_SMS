@@ -501,5 +501,133 @@ Ya he montado la fase, pero ahora veo que las plataformas que te empujan están 
 
 Me acabo de dar cuenta también de que no hay Zurully en esta versión. Tendré que adaptarlo de la de NES y pensar en meterlo. Habrá que revisar la colocación de los enemigos en la fase 3, pues. Pero ahora no. En cuanto vea que los conveyors funcionan guay, lo dejo on hold hasta nuevo aviso. El 31 de Enero hay que enviar los juegos para el concurso de nesdev y aún me queda hacer una fase en el pongpong y dejar fina la fase bonus.
 
+20170103
+========
+
+Hice mucho de fábrica, monté toda la fase de la cascada... Mil cosas. Ahora me ronda por la cabeza hacer los interludos con scroll, como las fases de autoavance de PongPong... reaprovechando al máximo el código.
+
+Lo primero que debería hacer es montar la rutina de scroll y asegurarme de que entra todo en el frame. Tengo que idear cómo hacerla y, sobre todo, como dividir el trabajo.
+
+Tengo que traerme una columna de tiles del mapa y bufferearla de alguna manera, porque en la SMS solo tengo una columna de patrones para hacer el scroll. Mandar los patrones a VRAM puede que me lo monte en ensamblador y no me preocupa. El problema será traer los tiles del mapa.
+
+Obviamente lo suyo sería tenerlo todo optimizado como en los motores de NES para que los datos me vengan ordenados y solo tenga que ir incrementando punteros.
+
+El tema sería llenar un buffer de 2x24 caracteres con los 12 metatiles de una columna del mapa. Esto lo tengo que hacer todo lo rápido que pueda. EL tema además es que los tiles van mapeados. El buffer debería ordenarlo por columna primero, o sea, columna0, columna1.
+
+y = 0;
+repetir 12 veces {
+	leer metatile "t" de map_pointer; map_pointer ++;
+    obtener un puntero a la definición de "t": pmeta = metatiles + (t << 2);
+
+    yy = y + y;
+    buffer [yy] = *pmeta ++;
+    buffer [24 + yy] = *pmeta ++;
+    yy ++;
+    buffer [yy] = *pmeta ++;
+    buffer [24 + yy] = *pmeta;
+
+    y ++;
+}
+
+Luego escribir una columna apuntada por *pcolumna sería establecer 24 veces la dirección y escribir un solo byte. Creo que la SMS no tiene modo de autoincremento de 32 como la NES. Joder.
+
+---
+
+Pero da igual, lo he escrito en ensamblador y funciona guay. Creo que lo he hecho lo más rápido posible. Como era de esperar, Sverx lo ha rechazado porque "ya se podía hacer". Sí, 10 veces más despacio, ¿no te furfulla? En fin, lo de siempre. Ya la disfrutaré yo.
+
+20170104
+========
+
+He optimizado levemente las funciones de sprites. Ya que eran mías, me he follado la compatibilidad con las estándar de SMSlib y me fumo la necesidad de tener que andar llevando índices y hostias. Creo e inicializo dos punteros y me encargo de llevarlos bien sincronizados. Obviamente es menos seguro (si te equivocas en tu programa, mal - pero es que lo suyo es NO EQUIVOCARSE EN TU PROGRAMA), pero según veo en el código acceder a un puntero genera menos código que acceder a un array. O eso me ha parecido:
+
+;test.c:59: *buff_ptr = 5;
+	ld	hl,(_buff_ptr)
+	ld	(hl),#0x05
+	inc	hl
+	ld	(hl),#0x00
+;test.c:60: buff [gpit] = 5;
+	ld	iy,#_gpit
+	ld	l,0 (iy)
+	ld	h,#0x00
+	add	hl, hl
+	ld	de,#_buff
+	add	hl,de
+	ld	(hl),#0x05
+	inc	hl
+	ld	(hl),#0x00
+
+Eso, de forma aislada. Y creo que en las funciones de SMSlib pasaba, así que ahora me creo mis punteros y me ocupo de que vayan bien sincronizados. Además me ahorro tener que calcular mis punteros (porque yo ya usaba punteros) en cada llamada, y tener que mantener el índice original.
+
+Ahora voy a compilar Yun a ver k ase XD
+
 ~~
+
+Ase bien yun, así que he ganao. Si necesito más ciclos puedo ponerme a darle fran con el ASM un poco más.
+
+Ahora tengo que seguir pensando en scrolles. Es que una fase de auto avance entre las fases normales lo molaría todo. Pero tengo que ver qué tengo que hacer para decidir cómo voy a almacenar los mapas y todas las cosas que necesito.
+
+Lo que está claro es que voy a usar metatiles mapeados. Es tontería, no creo que meta mucho más overhead. A fin de cuentas hay que leer un valor y escribirlo en otro, qué más da que sea un autoincremento que un número leído de un array. Sí, da, claro, hay un índice que hay que incrementar, pero tampoco es para morirse ¿no?
+
+Creo que el tema del buffer que diseñé el otro día podría funcionar, pero habría que establecer el algoritmo. Debería de intentar dejar de inventar ruedas.
+
+A ver, suponemos que tenemos un booleano "draw_new_column", además de un contador de columnas "column" que cicla 0 y 1 en el buffer.
+
+Esto de entrada:
+
+	cam_x ++;
+	cam_x_coarse = 31 + (cam_x >> 3);
+	need_new_column = (cam_x_coarse != cam_x_coarse_old);
+	cam_x_coarse_old = cam_x_coarse;
+
+	// Here :: fill the buffer? part of it?
+
+y esto durante VBLANK:
+
+	if (draw_new_column) {
+		UNSAFE_SMS_MT_ScrollUpdateVDP (
+			scroll_buffer + (column ? 0x40 : 0),
+			cam_x_coarse & 0x1f
+		);
+		draw_new_column = 0;
+
+		// Need new column from map?
+		if (column) {
+			need_new_column_from_map = 3;
+			collision_buffer_y = 0;
+			collision_buffer_x = cam_x_metatile_next & 0x0f;
+
+			scroll_buffer_ptr0 = scroll_buffer;
+			scroll_buffer_ptr1 = scroll_buffer + 0x40;
+		}
+
+		column = 1 - column;
+	}
+
+Teniendo en cuenta que hay que tener siempre rellenito el buffer. Esta es la parte que me mosquea. No sé cómo organizarme. Tengo que asegurarme de que siempre estará relleno y que habrá tiempo de hacerlo mientras el juego hace fullerías. Además, el buffer debe llenar también el buffer de las colisiones.
+
+En este juego tengo 8 frames para rellenar el buffer. Son 12 metatiles. Vamos a intentar hacerlo en cuatro frames: tres cada vez. 
+
+	// Here :: fill the buffer? part of it?
+	if (need_new_column_from_map) {
+
+		gpit = 3; while (gpit --) {
+			// Get tile from map
+			rdt = *c_map_ptr ++;
+
+			// Draw to the collision circular buffer
+			collision_buffer [(collision_buffer_y << 4) + collision_buffer_x] = c_behs [rdt];
+			collision_buffer_y += 16;
+
+			// Draw metatile
+			gp_gint = c_ts_tmaps + (t << 2); 
+			*scroll_buffer_ptr0 ++ = *gp_gint ++;
+			*scroll_buffer_ptr1 ++ = *gp_gint ++;
+			*scroll_buffer_ptr0 ++ = *gp_gint ++;
+			*scroll_buffer_ptr1 ++ = *gp_gint ++;
+		}
+
+		need_new_column_from_map --;
+	}
+	
+Hum. Creo que podría funcionar :) Tengo que probarlo, pero hay que montar un pifostiaco coponút. Ar. Ahora debería estar echándole los restos al multicart, que sale mañana. Me cagüen.
 

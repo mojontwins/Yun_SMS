@@ -22,6 +22,7 @@ const unsigned char *c_behs;
 
 // General 
 unsigned char *gp_gen, *gp_map;
+unsigned int *gp_gint;
 const unsigned char *gp_rom;
 unsigned char rda, rdb, rdc, rdct, rdt;
 unsigned char gpit, gpjt, cocoit;
@@ -123,3 +124,4 @@ unsigned char hrt, hrx, hry;
 
 // Extra shit
 unsigned char no_ct, no_x, no_y;
+unsigned char anim_tile_conveyor_offs;

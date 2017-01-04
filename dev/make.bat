@@ -42,6 +42,10 @@ rem Y los metaspritesets de cada fase
 ..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals3.png out=..\dev\work\level3\ss_patterns_enems3.bin tsmap=..\dev\banks\bank6\ss_enems3.h label=ss_enems3 offset=0,11 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
 ..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals0.png out=..\dev\work\level4\ss_patterns_enems4.bin tsmap=..\dev\banks\bank7\ss_enems4.h label=ss_enems4 offset=0,13 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
 
+rem Extra stuff
+..\utils\mkts.exe platform=sms mode=chars in=conveyor_left.png pals=pals1.png out=..\dev\work\level1\conveyor_left.bin size=1,3 silent
+..\utils\mkts.exe platform=sms mode=chars in=conveyor_right.png pals=pals1.png out=..\dev\work\level1\conveyor_right.bin size=1,3 silent
+
 rem map data
 echo Converting maps
 cd ..\map
@@ -101,7 +105,7 @@ echo Compressing and building data for level banks 3, 4, 5, 6, 7
 rem
 
 ..\utils\bin2c.exe -m -o banks\bank3\level0.h work\level0\ts_patterns0c.bin work\level0\ss_patterns_enems0c.bin work\level0\map_0c.bin work\level0\map_0_locksc.bin
-..\utils\bin2c.exe -m -o banks\bank4\level1.h work\level1\ts_patterns1c.bin work\level1\ss_patterns_enems1c.bin work\level1\map_1c.bin work\level1\map_1_locksc.bin
+..\utils\bin2c.exe -m -o banks\bank4\level1.h work\level1\ts_patterns1c.bin work\level1\ss_patterns_enems1c.bin work\level1\map_1c.bin work\level1\map_1_locksc.bin work\level1\conveyor_left.bin work\level1\conveyor_right.bin
 ..\utils\bin2c.exe -m -o banks\bank5\level2.h work\level2\ts_patterns2c.bin work\level2\ss_patterns_enems2c.bin work\level2\map_2c.bin work\level2\map_2_locksc.bin
 ..\utils\bin2c.exe -m -o banks\bank6\level3.h work\level3\ts_patterns3c.bin work\level3\ss_patterns_enems3c.bin work\level3\map_3c.bin work\level3\map_3_locksc.bin
 ..\utils\bin2c.exe -m -o banks\bank7\level4.h work\level4\ts_patterns4c.bin work\level4\ss_patterns_enems4c.bin work\level4\map_4c.bin work\level4\map_4_locksc.bin
@@ -148,7 +152,7 @@ echo.
 if [%1]==[justassets] goto :skipmain 
 echo Compiling...
 set STARTTIME=%TIME%
-sdcc -c -mz80 yun.c
+sdcc -c -mz80 --peep-file lib/peep-rules.txt --peep-asm yun.c
 set ENDTIME=%TIME%
 
 rem measure time http://stackoverflow.com/questions/9922498/calculate-time-difference-in-windows-batch-file

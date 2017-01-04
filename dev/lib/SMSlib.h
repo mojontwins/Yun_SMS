@@ -288,14 +288,28 @@ void SMS_VDPSetSpritesLocation (unsigned int location);
 */
 
 /* Mojon twins */
+
+// Fast sprite / metasprite functions
+// Please use initSpritesEx and finalizeSpritesEx.
+// ** NOTE THAT THESE FUNCTIONS ARE NOT COMPATIBLE WITH THOSE IN THE OFFICIAL SMSLIB **
+void SMS_MT_initSpritesEx (unsigned char initial);
+void SMS_MT_finalizeSpritesEx (void);
 void SMS_MT_addMetaspriteSimple (unsigned char x, unsigned char y, const unsigned char *metasprite);
 void SMS_MT_add2x2MetaSpriteSimpleUnrolled (unsigned char x, unsigned char y, const unsigned char *metasprite);
 void SMS_MT_add2x3MetaSpriteSimpleUnrolled (unsigned char x, unsigned char y, const unsigned char *metasprite);
+
+// Fast metatile functions
 void SMS_MT_draw2x2MetaTileatXY (unsigned char x, unsigned char y, const unsigned int *metatile);
 void SMS_MT_draw2x2MetaTileRowatXY (unsigned char x, unsigned char y, unsigned char r, const unsigned int *metatile);
 void SMS_MT_draw2x2MetaTileColatXY (unsigned char x, unsigned char y, unsigned char c, const unsigned int *metatile);
 void SMS_MT_addSpriteFast (unsigned char x, unsigned char y, unsigned char tile);
 void SMS_MT_setSpriteFastAt (unsigned char x, unsigned char y, unsigned char sprite, unsigned char tile);
-void SMS_MT_initSpritesEx (unsigned char initial);
+
+// When you just need to update 6 rows of a tile
+void UNSAFE_SMS_MT_VRAMmemcpy24 (unsigned int dst, void *src);
+
+// Draws a column of tiles from a linear buffer.
+void UNSAFE_SMS_MT_ScrollUpdateVDP (void *src, unsigned int column);
+
 /* Pichas y pachochas */
 

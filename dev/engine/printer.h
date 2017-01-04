@@ -5,7 +5,7 @@
 
 void sprites_out (void) {
 	SMS_MT_initSpritesEx (7); 	// Sprites 0-6 are reserved for the hud.
-	SMS_finalizeSprites ();
+	SMS_MT_finalizeSpritesEx ();
 	SMS_waitForVBlank ();
 	SMS_copySpritestoSAT ();
 }
@@ -28,4 +28,11 @@ inline void pal_cycle_waterfall_do (void) {
 	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [5]); rda ++; rda &= 7;
 	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [6]); rda ++; rda &= 7;
 	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [7]); rda ++; rda &= 7;
+}
+
+inline void tile_effects_factory_do (void) {
+	// Update tiles
+	UNSAFE_SMS_MT_VRAMmemcpy24 (VDP_ADDR_CONVEYOR_LEFT, (const unsigned char *) (work_level1_conveyor_left_bin + anim_tile_conveyor_offs));
+	UNSAFE_SMS_MT_VRAMmemcpy24 (VDP_ADDR_CONVEYOR_RIGHT, (const unsigned char *) (work_level1_conveyor_right_bin + anim_tile_conveyor_offs));
+	anim_tile_conveyor_offs += 24; if (anim_tile_conveyor_offs == 96) anim_tile_conveyor_offs = 0;
 }
