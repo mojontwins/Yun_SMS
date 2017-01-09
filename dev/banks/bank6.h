@@ -28,9 +28,9 @@ extern const unsigned char work_level3_map_3c_bin[1383];
 #define WORK_LEVEL3_MAP_3_LOCKSC_BIN_BANK 6
 extern const unsigned char work_level3_map_3_locksc_bin[26];
 
-#define WORK_OGT_M_INGAME3_PSG_SIZE 1853
+#define WORK_OGT_M_INGAME3_PSG_SIZE 5892
 #define WORK_OGT_M_INGAME3_PSG_BANK 6
-extern const unsigned char work_ogt_m_ingame3_psg[1853];
+extern const unsigned char work_ogt_m_ingame3_psg[5892];
 
 #define SS_ENEMS3_00_A_BANK 6
 extern const unsigned char ss_enems3_00_a [];

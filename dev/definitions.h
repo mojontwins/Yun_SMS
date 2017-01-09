@@ -102,6 +102,8 @@
 #define FABOLEES_VY_MAX 		32
 #define FABOLEES_VX_INI			42 
 
+#define FBL_INCR_MAX 			63
+
 // Sound effects
 
 #define SFX_SELECT		sfx_select_psg
@@ -121,3 +123,8 @@
 #define SC_PLAYER		0
 #define SC_ENEMS		1
 #define SC_LEVEL		2
+
+// Conveyors animated tiles address
+
+#define VDP_ADDR_CONVEYOR_LEFT		((256+26)<<5)
+#define VDP_ADDR_CONVEYOR_RIGHT		((256+27)<<5)

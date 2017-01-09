@@ -3,18 +3,11 @@
 
 // Sprite based hud
 
-void hud_render_base (void) {
-	SMS_MT_setSpriteFastAt (8, 8, 0, 10);
-	SMS_MT_setSpriteFastAt (8, 16, 1, 12);
-	SMS_MT_setSpriteFastAt (8, 24, 2, 11);
-}
+#ifndef __HUD_H
+#define __HUD_H
 
-void hud_render_numbers (void) {
-	SMS_MT_setSpriteFastAt (20, 8, 3, plife < 10 ? plife : 9);
-	SMS_MT_setSpriteFastAt (20, 16, 4, pkeys);
-}
+void hud_render_base (void);
+void hud_render_numbers (void);
+void hud_render_nenems (void);
 
-void hud_render_nenems (void) {
-	SMS_MT_setSpriteFastAt (20, 24, 5, baddies_count / 10); 
-	SMS_MT_setSpriteFastAt (28, 24, 6, baddies_count % 10);
-}
+#endif

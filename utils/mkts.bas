@@ -298,7 +298,7 @@ Function smsFindColourWithPal (c As Integer, pal () As Integer, wp As Integer) A
 	Dim As Integer i
 	res = 15
 	If c = &HFF171717 Then 
-		smsFindColourWithPal = 0
+		smsFindColourWithPal = wp*16
 		Exit Function
 	End If
 	For i = wp*16 To wp*16+15
@@ -653,7 +653,7 @@ Function smsFindWhichPal (img As Any Ptr, x0 As Integer, y0 As Integer, pal () A
 	c1PalCols = 0: c2PalCols = 0
 	For y = 0 To vSize - 1
 		For x = 0 To hSize - 1
-			c = Point (x0 + x, y0 + y, img): If c = &HFF171717 Then c = pal (0) 
+			c = Point (x0 + x, y0 + y, img): If c = &HFF171717 Then Continue For ' c = pal (0) 
 			If smsColourExistsInPal (c, pal (), 0) Then
 				cp = smsFindColourWithPal (c, pal (), 0) And 15
 				If ticks (0, cp) = 0 Then c1PalCols = c1PalCols + 1

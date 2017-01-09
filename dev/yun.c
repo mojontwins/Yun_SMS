@@ -41,6 +41,7 @@
 #include "engine/enems.h"
 #include "engine/inits.h"
 #include "engine/hotspots.h"
+#include "engine/scroller.h"
 #include "engine/game.h"
 
 void main (void) {
@@ -53,7 +54,7 @@ void main (void) {
 	// Sprites take more patterns, so...
 	SMS_useFirstHalfTilesforSprites (1);
 
-	level = 3;//debug_vars [0]; // So you don't have to recompile everything when testing levels 
+	level = 5;//debug_vars [0]; // So you don't have to recompile everything when testing levels 
 	plife = 5;
 	init_world ();
 

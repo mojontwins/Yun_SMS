@@ -576,7 +576,7 @@ Esto de entrada:
 
 	cam_x ++;
 	cam_x_coarse = 31 + (cam_x >> 3);
-	need_new_column = (cam_x_coarse != cam_x_coarse_old);
+	draw_new_column = (cam_x_coarse != cam_x_coarse_old);
 	cam_x_coarse_old = cam_x_coarse;
 
 	// Here :: fill the buffer? part of it?
@@ -630,4 +630,60 @@ En este juego tengo 8 frames para rellenar el buffer. Son 12 metatiles. Vamos a 
 	}
 	
 Hum. Creo que podría funcionar :) Tengo que probarlo, pero hay que montar un pifostiaco coponút. Ar. Ahora debería estar echándole los restos al multicart, que sale mañana. Me cagüen.
+
+20170106
+========
+
+Debería sentarme y disfrutar del Multicart recién lanzado y echando humito, pero prefiero ponerme a hacer las fases de Scroll de Yun para dejar el engine medio listo antes de ponerme a terminar de crear contenido como un machote. Machete.
+
+Vamos al lío. Necesitaré el conversor por columnas de Pong Pong. Creo que me sirve derti. Y luego, a hacer pruebas y esperar horas. O eso o intento al menos montar el scroller por su cuenta y riesgo. mejor.
+
+~~
+
+Nah, necesito un conversor tonter propio. Lo hago en un peo.
+
+20170109
+========
+
+Soy lo peor, ¿no? Cada vez escribo menos diarios. Hice las rutinas de scroll y tal en un tester separado y funcionan genial. Prácticamente es el código que diseñé offline el otro día, con alguna que otra enmienda.
+
+Lo intenté montar en el bloque principal pero se queda la pantalla en negro. Hacer prueba y error con este mostrenco es imposible, tarda 4 minutos en compilar cada vez, así que creo que tendré que ponerme a hacer lo que llevo posponiendo un siglo: refactorizar el proyecto para dividirlo en módulos. Será un coñazo, pero me permitirá compilar partes por separado e incluso montar un makefile y que esto no sea tan dolor.
+
+Voy a ello, poco a poco. Empezaré por módulos pequeños. A ver si así puede ser.
+
+~~
+
+¡Funcionando! He tenido que usar el make que venía en mingw32, porque el make peste que tenía del paquete de GNU for Windows me mandaba a freír monas. A lo mejor en el paquete de git viene un make que funcione, debería mirar, porque el make de mingw32 depende de tres DLL y entre todos ocupan un buebo.
+
+Por frikismo, molaría meter toda la generación de los bancos en el makefile, pero eso pasaría por ampliar mkts para que funcionase por scripts el target sms, y eso ahora no me apetece.
+
+~~
+
+Al pasar a la implementación int de los fabolees ocurre que si estoy montado en el fabolee y salto sobre él un poquito el muñeco sube a toda velocidad. A toda velocidad es 16 pixels por frame. No sé por qué. Llevo un montón de rato mirándolo todo y no doy con la tecla. Creo que lo dejaré ahí por el momento, hasta que se me encienda la bombilla. He perdido horas, literalmente.
+
+Quiero ver si el scroller funciona, joder.
+
+~~
+
+Si va, a mitades, porque falla lo que me dio por culo cuando hacía las pruebas (la nueva columna de tiles se copia un caracter más tarde) y como soy gilipollas y no apunto diarios no recuerdo qué pasaba. Me cago en mi puta calavera.
+
+~~
+
+Bueno, está solucionado. Ha sido menos dolor de lo que pensaba. ¿Me atrevo a hacer la fullery de meter player?
+
+AY XD
+
+~~
+
+Vale.
+
+Ya he visto qué pasa, medio funciona, pero el buffer pierde un tile. Tengo que pensar muy despacio qué pasa pero seguro que lo arreglo.
+
+O sea, si tenemos
+
+·······O····
+XXXXXXXXXXXX
+      |
+      \ es como si la "O" estuviese ahí.
+~~
 

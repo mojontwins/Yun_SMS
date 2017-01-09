@@ -15,6 +15,13 @@ extern const unsigned char hotspots_0 [];
 #define MAX_HOTSPOTS_TYPE_0_0	17
 #define MAX_HOTSPOTS_TYPE_1_0	2
 #define MAX_HOTSPOTS_TYPE_2_0	5
+#define ENEMS_5_BANK 3
+extern const unsigned char enems_5 [];
+
+#define HOTSPOTS_5_BANK 3
+extern const unsigned char hotspots_5 [];
+
+#define MAX_HOTSPOTS_TYPE_0_5	16
 #define WORK_LEVEL0_TS_PATTERNS0C_BIN_SIZE 2076
 #define WORK_LEVEL0_TS_PATTERNS0C_BIN_BANK 3
 extern const unsigned char work_level0_ts_patterns0c_bin[2076];
@@ -30,6 +37,14 @@ extern const unsigned char work_level0_map_0c_bin[2477];
 #define WORK_LEVEL0_MAP_0_LOCKSC_BIN_SIZE 6
 #define WORK_LEVEL0_MAP_0_LOCKSC_BIN_BANK 3
 extern const unsigned char work_level0_map_0_locksc_bin[6];
+
+#define WORK_LEVEL5_TS_PATTERNS5C_BIN_SIZE 1763
+#define WORK_LEVEL5_TS_PATTERNS5C_BIN_BANK 3
+extern const unsigned char work_level5_ts_patterns5c_bin[1763];
+
+#define WORK_LEVEL5_MAP_5C_BIN_SIZE 227
+#define WORK_LEVEL5_MAP_5C_BIN_BANK 3
+extern const unsigned char work_level5_map_5c_bin[227];
 
 #define WORK_OGT_M_INGAME0_PSG_SIZE 1853
 #define WORK_OGT_M_INGAME0_PSG_BANK 3
@@ -109,4 +124,7 @@ extern const unsigned char ss_enems0_07_ud [];
 
 #define TS_META0_TMAPS_BANK 3
 extern const unsigned int ts_meta0_tmaps [];
+
+#define TS_META5_TMAPS_BANK 3
+extern const unsigned int ts_meta5_tmaps [];
 

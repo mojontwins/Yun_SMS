@@ -13,3 +13,6 @@ extern const unsigned char	ss_patterns_items_c_bin [];
 extern const unsigned char	ss_patterns_yun_c_bin [];
 #define						SS_PATTERNS_YUN_C_BIN_SIZE 0x0514
 
+extern const unsigned char	ts_hex_c_bin [];
+#define						TS_HEX_C_BIN_SIZE 0x00EA
+

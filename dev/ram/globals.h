@@ -12,7 +12,7 @@ unsigned char cur_rand;
 unsigned char level;
 unsigned char c_bank;
 unsigned char c_map_w, c_map_h;
-const unsigned char *c_map;
+const unsigned char *c_map, *c_map_ptr;
 const unsigned int *c_ts_tmaps;
 const unsigned char *c_pals;
 const unsigned char *c_enems;
@@ -22,7 +22,7 @@ const unsigned char *c_behs;
 
 // General 
 unsigned char *gp_gen, *gp_map;
-unsigned int *gp_gint;
+const unsigned int *gp_gint;
 const unsigned char *gp_rom;
 unsigned char rda, rdb, rdc, rdct, rdt;
 unsigned char gpit, gpjt, cocoit;
@@ -81,6 +81,7 @@ unsigned char coco_flag [COCOS_MAX];
 
 // Player
 signed int px, py, pcy, pvx, pvy;
+signed char pdx, pdy;
 unsigned char pfacing, psprid;
 unsigned char pj, pctj, pjb, pgotten, pregotten, ppossee, psprint;
 unsigned char pobjs, plife, pcontinues, pkeys, pkilled;
@@ -103,21 +104,22 @@ unsigned char ppropelled;
 
 // Fabolees
 // Those are for regular, fp fabolees
+/*
 signed int fbl_x [FABOLEES_MAX], fbl_y [FABOLEES_MAX];
 signed int fbl_vx [FABOLEES_MAX], fbl_vy [FABOLEES_MAX];
 unsigned char fbl_ct [FABOLEES_MAX];
 unsigned char fbl_lock_on [FABOLEES_MAX];
 unsigned char fbl_accctr [FABOLEES_MAX];
-
+*/
 // Arrays for simple, integer, precalculated fabolees
-/*
+
 unsigned char fbl_x [FABOLEES_MAX], fbl_y [FABOLEES_MAX];
 unsigned char fbl_ct [FABOLEES_MAX];
 unsigned char fbl_lock_on [FABOLEES_MAX];
 unsigned char fbl_accctr [FABOLEES_MAX];
 unsigned char fbl_idx_y [FABOLEES_MAX], fbl_idx_my [FABOLEES_MAX], fbl_idx_x [FABOLEES_MAX];
 unsigned char fbl_facing [FABOLEES_MAX];
-*/
+
 // (Very) simple hotspots
 unsigned char hact [MAX_SCREENS];
 unsigned char hrt, hrx, hry;
@@ -125,3 +127,20 @@ unsigned char hrt, hrx, hry;
 // Extra shit
 unsigned char no_ct, no_x, no_y;
 unsigned char anim_tile_conveyor_offs;
+
+// Scroller variables
+unsigned char advance_cam; // boolean
+signed int cam_x;
+signed int cam_x_coarse, cam_x_coarse_old;
+unsigned char cam_x_module;
+unsigned char column;
+unsigned char draw_new_column;
+volatile unsigned char need_new_column_from_map;
+
+unsigned char collision_buffer [192];
+unsigned char collision_buffer_idx;
+
+unsigned int scroll_buffer [48];
+unsigned int *scroll_buffer_ptr0, *scroll_buffer_ptr1;
+
+//

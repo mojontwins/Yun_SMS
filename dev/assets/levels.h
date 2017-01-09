@@ -5,7 +5,8 @@
 
 // Level banks
 const unsigned char level_banks [] = {
-	3, 4, 5, 6, 7
+	3, 4, 5, 6, 7,
+	3, 4, 5, 6
 };
 
 // Compressed map data
@@ -14,7 +15,12 @@ const unsigned char * const level_maps [] = {
 	work_level1_map_1c_bin,
 	work_level2_map_2c_bin,
 	work_level3_map_3c_bin,
-	work_level4_map_4c_bin
+	work_level4_map_4c_bin,
+
+	work_level5_map_5c_bin,
+	work_level5_map_5c_bin,
+	work_level5_map_5c_bin,
+	work_level5_map_5c_bin
 };
 
 // Metatileset patterns
@@ -23,7 +29,12 @@ const unsigned char * const level_ts_patterns [] = {
 	work_level1_ts_patterns1c_bin,
 	work_level2_ts_patterns2c_bin,
 	work_level3_ts_patterns3c_bin,
-	work_level4_ts_patterns4c_bin
+	work_level4_ts_patterns4c_bin,
+
+	work_level5_ts_patterns5c_bin,
+	work_level5_ts_patterns5c_bin,
+	work_level5_ts_patterns5c_bin,
+	work_level5_ts_patterns5c_bin
 };
 
 // Metaspriteset patterns
@@ -32,7 +43,12 @@ const unsigned char * const level_ss_patterns [] = {
 	work_level1_ss_patterns_enems1c_bin,
 	work_level2_ss_patterns_enems2c_bin,
 	work_level3_ss_patterns_enems3c_bin,
-	work_level4_ss_patterns_enems4c_bin
+	work_level4_ss_patterns_enems4c_bin,
+
+	work_level0_ss_patterns_enems0c_bin,
+	work_level0_ss_patterns_enems0c_bin,
+	work_level0_ss_patterns_enems0c_bin,
+	work_level0_ss_patterns_enems0c_bin
 };
 
 // Metatilesets
@@ -41,7 +57,12 @@ const unsigned int * const level_ts_tmaps [] = {
 	ts_meta1_tmaps,
 	ts_meta2_tmaps,
 	ts_meta3_tmaps,
-	ts_meta4_tmaps
+	ts_meta4_tmaps,
+
+	ts_meta5_tmaps,
+	ts_meta5_tmaps,
+	ts_meta5_tmaps,
+	ts_meta5_tmaps
 };
 
 // Palettes
@@ -50,7 +71,12 @@ const unsigned char * const level_pals [] = {
 	pals1,
 	pals2,
 	pals3,
-	pals4
+	pals4,
+
+	pals5,
+	pals5,
+	pals5,
+	pals5
 };
 
 // Initial position
@@ -68,12 +94,12 @@ const unsigned char level_ini_y [] = {
 
 // Level width (in screens)
 const unsigned char level_map_w [] = {
-	4, 4, 4, 3, 6
+	4, 4, 4, 3, 12
 };
 
 // Level height (in screens)
 const unsigned char level_map_h [] = {
-	4, 4, 4, 4, 4
+	6, 6, 6, 4, 2
 };
 
 // Enems data
@@ -82,7 +108,12 @@ const unsigned char * const level_enems [] = {
 	enems_1,
 	enems_2,
 	enems_3,
-	enems_4
+	enems_4,
+
+	enems_5,
+	enems_5,
+	enems_5,
+	enems_5
 };
 
 // Behaviours
@@ -91,7 +122,12 @@ const unsigned char * const level_behs [] = {
 	behs1,
 	behs2,
 	behs3,
-	behs4
+	behs4,
+
+	behs5,
+	behs5,
+	behs5,
+	behs5
 };
 
 // Hotspots
@@ -109,5 +145,10 @@ const unsigned char * const level_tunes [] = {
 	work_ogt_m_ingame1_psg,
 	work_ogt_m_ingame2_psg,
 	work_ogt_m_ingame3_psg,
-	work_ogt_m_ingame4_psg
+	work_ogt_m_ingame4_psg,
+
+	work_ogt_m_ingame0_psg,
+	work_ogt_m_ingame0_psg,
+	work_ogt_m_ingame0_psg,
+	work_ogt_m_ingame0_psg
 };

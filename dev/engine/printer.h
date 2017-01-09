@@ -3,36 +3,14 @@
 
 // Printer. Auxiliary printing functions
 
-void sprites_out (void) {
-	SMS_MT_initSpritesEx (7); 	// Sprites 0-6 are reserved for the hud.
-	SMS_MT_finalizeSpritesEx ();
-	SMS_waitForVBlank ();
-	SMS_copySpritestoSAT ();
-}
+#ifndef __PRINTER_H
+#define __PRINTER_H
 
-inline void pal_cycle_desert_do (void) {
-	rda = (frame_counter >> 4) & 3;	// Offset
-	SMS_setBGPaletteColor (11 + rda, pal_cycle_desert [0]); rda ++; rda &= 3;
-	SMS_setBGPaletteColor (11 + rda, pal_cycle_desert [1]); rda ++; rda &= 3;
-	SMS_setBGPaletteColor (11 + rda, pal_cycle_desert [2]); rda ++; rda &= 3;
-	SMS_setBGPaletteColor (11 + rda, pal_cycle_desert [3]); rda ++; rda &= 3;
-}
+void sprites_out (void);
+inline void pal_cycle_desert_do (void);
+inline void pal_cycle_waterfall_do (void);
+inline void tile_effects_factory_do (void);
 
-inline void pal_cycle_waterfall_do (void) {
-	rda = (frame_counter >> 2) & 7;	// Offset
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [0]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [1]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [2]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [3]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [4]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [5]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [6]); rda ++; rda &= 7;
-	SMS_setBGPaletteColor (8 + rda, pal_cycle_waterfall [7]); rda ++; rda &= 7;
-}
+void debug_print_hex (unsigned char x, unsigned char y, unsigned char v);
 
-inline void tile_effects_factory_do (void) {
-	// Update tiles
-	UNSAFE_SMS_MT_VRAMmemcpy24 (VDP_ADDR_CONVEYOR_LEFT, (const unsigned char *) (work_level1_conveyor_left_bin + anim_tile_conveyor_offs));
-	UNSAFE_SMS_MT_VRAMmemcpy24 (VDP_ADDR_CONVEYOR_RIGHT, (const unsigned char *) (work_level1_conveyor_right_bin + anim_tile_conveyor_offs));
-	anim_tile_conveyor_offs += 24; if (anim_tile_conveyor_offs == 96) anim_tile_conveyor_offs = 0;
-}
+#endif

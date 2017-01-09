@@ -1,8 +1,7 @@
 @echo off
-echo remember: justcompile, compileandbanks, justassets.
-echo and be prepared to waitttttt...
+echo remember: justcompile, justassets.
+
 if [%1]==[justcompile] goto :justcompile
-if [%1]==[compileandbanks] goto :compileandbanks
 
 cd ..\gfx
 
@@ -13,18 +12,22 @@ echo Converting palettes
 ..\utils\mkts.exe platform=sms mode=pals pals=pals2.png out=..\dev\work\pals2.h label=pals2 silent
 ..\utils\mkts.exe platform=sms mode=pals pals=pals3.png out=..\dev\work\pals3.h label=pals3 silent
 ..\utils\mkts.exe platform=sms mode=pals pals=pals4.png out=..\dev\work\pals4.h label=pals4 silent
-copy /b ..\dev\work\pals0.h + ..\dev\work\pals1.h + ..\dev\work\pals2.h + ..\dev\work\pals3.h + ..\dev\work\pals4.h ..\dev\assets\palettes.h > nul
+..\utils\mkts.exe platform=sms mode=pals pals=pals5.png out=..\dev\work\pals5.h label=pals5 silent
+copy /b ..\dev\work\pals0.h + ..\dev\work\pals1.h + ..\dev\work\pals2.h + ..\dev\work\pals3.h + ..\dev\work\pals4.h + ..\dev\work\pals5.h ..\dev\assets\palettes.h > nul
 
 rem Gráficos
 echo Converting graphics
+
+rem Debugging.
+..\utils\mkts.exe platform=sms mode=chars in=hex.png pals=pals1.png out=..\dev\work\main\ts_hex.bin size=16,1 silent
 
 rem Primero vamos a convertir los metatilesets de las fases
 ..\utils\mkts.exe platform=sms mode=mapped in=ts0.png pals=pals0.png out=..\dev\work\level0\ts_patterns0.bin tsmap=..\dev\banks\bank3\ts_meta0.h label=ts_meta0 offset=0,0 size=16,3 metasize=2,2 tmapoffset=256 silent
 ..\utils\mkts.exe platform=sms mode=mapped in=ts1.png pals=pals1.png out=..\dev\work\level1\ts_patterns1.bin tsmap=..\dev\banks\bank4\ts_meta1.h label=ts_meta1 offset=0,0 size=16,5 metasize=2,2 tmapoffset=256 silent
 ..\utils\mkts.exe platform=sms mode=mapped in=ts2.png pals=pals2.png out=..\dev\work\level2\ts_patterns2.bin tsmap=..\dev\banks\bank5\ts_meta2.h label=ts_meta2 offset=0,0 size=16,3 metasize=2,2 tmapoffset=256 silent
 ..\utils\mkts.exe platform=sms mode=mapped in=ts3.png pals=pals3s.png out=..\dev\work\level3\ts_patterns3.bin tsmap=..\dev\banks\bank6\ts_meta3.h label=ts_meta3 offset=0,0 size=16,4 metasize=2,2 tmapoffset=256 silent
-rem CHANGE WHEN DONE:
-..\utils\mkts.exe platform=sms mode=mapped in=ts0.png pals=pals0.png out=..\dev\work\level4\ts_patterns4.bin tsmap=..\dev\banks\bank7\ts_meta4.h label=ts_meta4 offset=0,0 size=16,3 metasize=2,2 tmapoffset=256 silent
+..\utils\mkts.exe platform=sms mode=mapped in=ts4.png pals=pals4.png out=..\dev\work\level4\ts_patterns4.bin tsmap=..\dev\banks\bank7\ts_meta4.h label=ts_meta4 offset=0,0 size=16,4 metasize=2,2 tmapoffset=256 silent
+..\utils\mkts.exe platform=sms mode=mapped in=ts5.png pals=pals5.png out=..\dev\work\level5\ts_patterns5.bin tsmap=..\dev\banks\bank3\ts_meta5.h label=ts_meta5 offset=0,0 size=16,2 metasize=2,2 tmapoffset=256 silent
 
 rem Ahora, los metaspritesets fijos.
 ..\utils\mkts.exe platform=sms mode=chars in=ss-hud.png pals=pals0.png out=..\dev\work\main\ss_patterns_hud.bin size=16,1 silent
@@ -37,7 +40,7 @@ rem free @ 159 (160, in fact!)
 
 rem Y los metaspritesets de cada fase
 ..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals0.png out=..\dev\work\level0\ss_patterns_enems0.bin tsmap=..\dev\banks\bank3\ss_enems0.h label=ss_enems0 offset=0,5 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
-..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals0.png out=..\dev\work\level1\ss_patterns_enems1.bin tsmap=..\dev\banks\bank4\ss_enems1.h label=ss_enems1 offset=0,7 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
+..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals0.png out=..\dev\work\level1\ss_patterns_enems1.bin tsmap=..\dev\banks\bank4\ss_enems1.h label=ss_enems1 offset=0,7 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=170 genflipped upsidedown simple silent
 ..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals0.png out=..\dev\work\level2\ss_patterns_enems2.bin tsmap=..\dev\banks\bank5\ss_enems2.h label=ss_enems2 offset=0,9 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
 ..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals3.png out=..\dev\work\level3\ss_patterns_enems3.bin tsmap=..\dev\banks\bank6\ss_enems3.h label=ss_enems3 offset=0,11 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
 ..\utils\mkts.exe platform=sms mode=sprites in=ss.png pals=pals0.png out=..\dev\work\level4\ss_patterns_enems4.bin tsmap=..\dev\banks\bank7\ss_enems4.h label=ss_enems4 offset=0,13 size=8,1 metasize=2,2 sprorg=0,0 tmapoffset=185 genflipped upsidedown simple silent
@@ -53,8 +56,10 @@ cd ..\map
 ..\utils\unpackedmap.exe level1.MAP bin=..\dev\work\level1 4 6 15 1
 ..\utils\unpackedmap.exe level2.MAP bin=..\dev\work\level2 4 6 15 2
 ..\utils\unpackedmap.exe level3.MAP bin=..\dev\work\level3 3 4 15 3
-rem CHANGE WHEN DONE:
-..\utils\unpackedmap.exe level0.MAP bin=..\dev\work\level4 4 6 15 4
+..\utils\unpackedmap.exe level4.MAP bin=..\dev\work\level4 12 2 15 4
+
+rem AUTOSCROLL
+..\utils\colsmapper.exe in=level5.MAP out=..\dev\work\level5\map_5.bin
 
 echo Converting enems
 cd ..\enems
@@ -62,12 +67,13 @@ cd ..\enems
 ..\utils\eneexp2.exe enems1.ene ..\dev\banks\bank4\enems1.h 1
 ..\utils\eneexp2.exe enems2.ene ..\dev\banks\bank5\enems2.h 2
 ..\utils\eneexp2.exe enems3.ene ..\dev\banks\bank6\enems3.h 3
-rem CHANGE WHEN DONE:
-..\utils\eneexp2.exe enems0.ene ..\dev\banks\bank7\enems4.h 4
+..\utils\eneexp2.exe enems4.ene ..\dev\banks\bank7\enems4.h 4
+..\utils\eneexp2.exe enems5.ene ..\dev\banks\bank3\enems5.h 5
 
 rem compress & make available
 echo Compressing main assets
 cd ..\dev
+..\utils\apack.exe work\main\ts_hex.bin banks\main\ts_hex_c.bin > nul
 ..\utils\apack.exe work\main\ss_patterns_hud.bin banks\main\ss_patterns_hud_c.bin > nul
 ..\utils\apack.exe work\main\ss_patterns_yun.bin banks\main\ss_patterns_yun_c.bin > nul
 ..\utils\apack.exe work\main\ss_patterns_items.bin banks\main\ss_patterns_items_c.bin > nul
@@ -83,6 +89,7 @@ echo Compressing and building data for level banks 3, 4, 5, 6, 7
 ..\utils\apack.exe work\level2\ts_patterns2.bin work\level2\ts_patterns2c.bin > nul
 ..\utils\apack.exe work\level3\ts_patterns3.bin work\level3\ts_patterns3c.bin > nul
 ..\utils\apack.exe work\level4\ts_patterns4.bin work\level4\ts_patterns4c.bin > nul
+..\utils\apack.exe work\level5\ts_patterns5.bin work\level5\ts_patterns5c.bin > nul
 
 ..\utils\apack.exe work\level0\ss_patterns_enems0.bin work\level0\ss_patterns_enems0c.bin > nul
 ..\utils\apack.exe work\level1\ss_patterns_enems1.bin work\level1\ss_patterns_enems1c.bin > nul
@@ -95,6 +102,7 @@ echo Compressing and building data for level banks 3, 4, 5, 6, 7
 ..\utils\apack.exe work\level2\map_2.bin work\level2\map_2c.bin > nul
 ..\utils\apack.exe work\level3\map_3.bin work\level3\map_3c.bin > nul
 ..\utils\apack.exe work\level4\map_4.bin work\level4\map_4c.bin > nul
+..\utils\apack.exe work\level5\map_5.bin work\level5\map_5c.bin > nul
 
 ..\utils\apack.exe work\level0\map_0_locks.bin work\level0\map_0_locksc.bin > nul
 ..\utils\apack.exe work\level1\map_1_locks.bin work\level1\map_1_locksc.bin > nul
@@ -109,6 +117,7 @@ rem
 ..\utils\bin2c.exe -m -o banks\bank5\level2.h work\level2\ts_patterns2c.bin work\level2\ss_patterns_enems2c.bin work\level2\map_2c.bin work\level2\map_2_locksc.bin
 ..\utils\bin2c.exe -m -o banks\bank6\level3.h work\level3\ts_patterns3c.bin work\level3\ss_patterns_enems3c.bin work\level3\map_3c.bin work\level3\map_3_locksc.bin
 ..\utils\bin2c.exe -m -o banks\bank7\level4.h work\level4\ts_patterns4c.bin work\level4\ss_patterns_enems4c.bin work\level4\map_4c.bin work\level4\map_4_locksc.bin
+..\utils\bin2c.exe -m -o banks\bank3\level5.h work\level5\ts_patterns5c.bin work\level5\map_5c.bin
 
 rem Level music
 
@@ -150,9 +159,9 @@ echo.
 
 :justcompile
 if [%1]==[justassets] goto :skipmain 
-echo Compiling...
+echo Making...
 set STARTTIME=%TIME%
-sdcc -c -mz80 --peep-file lib/peep-rules.txt --peep-asm yun.c
+..\utils\mingw32-make.exe
 set ENDTIME=%TIME%
 
 rem measure time http://stackoverflow.com/questions/9922498/calculate-time-difference-in-windows-batch-file
@@ -172,25 +181,18 @@ if %cc% lss 10 set cc=0%cc%
 set DURATION=%hh%:%mm%:%ss%,%cc%
 
 echo SDCC se ha tirado fumando exactamente %DURATION% 
-echo en un %PROCESSOR_IDENTIFIER% con %NUMBER_OF_PROCESSORS% núcleos.
+echo en un %PROCESSOR_IDENTIFIER% con %NUMBER_OF_PROCESSORS% nucleos.
 
 :skipmain
 
-echo Linking...
-sdcc -o yun.ihx -mz80 --no-std-crt0 --data-loc 0xC000 -Wl-b_BANK2=0x8000 -Wl-b_BANK3=0x8000 -Wl-b_BANK4=0x8000 -Wl-b_BANK5=0x8000 -Wl-b_BANK6=0x8000 -Wl-b_BANK7=0x8000 lib\crt0_sms.rel yun.rel lib\SMSlib.lib lib\PSGlib.rel lib\aPLib.rel banks\maindata.rel banks\bank2.rel banks\bank3.rel banks\bank4.rel banks\bank5.rel banks\bank6.rel banks\bank7.rel
-
-echo Building cart image...
-..\utils\ihx2sms yun.ihx yun.sms
-
 echo.
-echo DONE COJONE!
+echo Cleaning
 echo.
 
-rem del yun.asm > nul
-rem del yun.rel > nul
+del *.asm >nul
+del *.lst >nul
+del *.sym >nul
 del yun.ihx > nul
-del yun.lk  > nul
-del yun.lst > nul
-del yun.map > nul
+del yun.lk > nul
 del yun.noi > nul
-del yun.sym > nul
+rem del yun.map > nul

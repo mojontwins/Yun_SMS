@@ -7,32 +7,25 @@ extern const unsigned char debug_vars [];
 #define ENEMS_4_BANK 7
 extern const unsigned char enems_4 [];
 
-#define MAX_ENEMS_TYPE_01_4	11
-#define MAX_ENEMS_TYPE_02_4	18
-#define MAX_ENEMS_TYPE_04_4	5
-#define MAX_ENEMS_TYPE_06_4	4
-#define MAX_ENEMS_TYPE_09_4	7
 #define HOTSPOTS_4_BANK 7
 extern const unsigned char hotspots_4 [];
 
-#define MAX_HOTSPOTS_TYPE_0_4	17
-#define MAX_HOTSPOTS_TYPE_1_4	2
-#define MAX_HOTSPOTS_TYPE_2_4	5
-#define WORK_LEVEL4_TS_PATTERNS4C_BIN_SIZE 2076
+#define MAX_HOTSPOTS_TYPE_0_4	24
+#define WORK_LEVEL4_TS_PATTERNS4C_BIN_SIZE 2472
 #define WORK_LEVEL4_TS_PATTERNS4C_BIN_BANK 7
-extern const unsigned char work_level4_ts_patterns4c_bin[2076];
+extern const unsigned char work_level4_ts_patterns4c_bin[2472];
 
 #define WORK_LEVEL4_SS_PATTERNS_ENEMS4C_BIN_SIZE 1072
 #define WORK_LEVEL4_SS_PATTERNS_ENEMS4C_BIN_BANK 7
 extern const unsigned char work_level4_ss_patterns_enems4c_bin[1072];
 
-#define WORK_LEVEL4_MAP_4C_BIN_SIZE 2477
+#define WORK_LEVEL4_MAP_4C_BIN_SIZE 1867
 #define WORK_LEVEL4_MAP_4C_BIN_BANK 7
-extern const unsigned char work_level4_map_4c_bin[2477];
+extern const unsigned char work_level4_map_4c_bin[1867];
 
-#define WORK_LEVEL4_MAP_4_LOCKSC_BIN_SIZE 6
+#define WORK_LEVEL4_MAP_4_LOCKSC_BIN_SIZE 11
 #define WORK_LEVEL4_MAP_4_LOCKSC_BIN_BANK 7
-extern const unsigned char work_level4_map_4_locksc_bin[6];
+extern const unsigned char work_level4_map_4_locksc_bin[11];
 
 #define WORK_OGT_M_INGAME4_PSG_SIZE 1853
 #define WORK_OGT_M_INGAME4_PSG_BANK 7
